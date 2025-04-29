@@ -39,7 +39,15 @@ class UsersController {
     }
   }
 
-  
+  async index(request: Request, response: Response, next: NextFunction) {
+    try {
+      const users = await prisma.users.findMany()
+
+      return response.json(users)
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 export { UsersController };
