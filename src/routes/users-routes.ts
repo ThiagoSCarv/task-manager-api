@@ -23,7 +23,7 @@ usersRoutes.delete(
   "/:id",
   ensureAuthenticated,
   verifyAuthorization(["admin"]),
-  usersController.delete
+  usersController.remove
 );
 
 export { usersRoutes };

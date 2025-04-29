@@ -85,7 +85,7 @@ class UsersController {
     }
   }
 
-  async delete(request: Request, response: Response, next: NextFunction) {
+  async remove(request: Request, response: Response, next: NextFunction) {
     try {
       const paramsSchema = z.object({
         id: z.string().trim(),
