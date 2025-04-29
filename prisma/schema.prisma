@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  admin
+  member
+}
+
+enum Status {
+  pending
+  in_progress
+  completed
+}
+
+enum Priority {
+  high
+  medium
+  low
+}
+
+model Users {
+  id String @id @default(uuid())
+  name String @db.VarChar(100)
+  email String @unique @db.VarChar(150)
+  password String @db.VarChar(255)
+  role Role @default(member)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  user teamMembers[]
+  userAssigned Tasks[]
+  whoChanged TaskHistory[]
+
+  @@map("users")
+}
+
+model Teams {
+  id String @id @default(uuid())
+  name String @db.VarChar(100)
+  description String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  team teamMembers[]
+  teamTask Tasks[]
+
+  @@map("teams")
+}
+
+model teamMembers {
+  id String @id @default(uuid())
+  userId String @map("user_id")
+  teamId String @map("team_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user Users @relation(fields: [userId], references: [id])
+  team Teams @relation(fields: [teamId], references: [id])
+
+  @@map("team_members")
+}
+
+model Tasks {
+  id String @id @default(uuid())
+  title String @db.VarChar(200)
+  description String 
+  status Status @default(pending)
+  priority Priority @default(medium)
+  assignedTo String @map("assigned_to")
+  teamId String @map("team_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  userAssigned Users @relation(fields: [assignedTo], references: [id])
+  teamTask Teams @relation(fields: [teamId], references: [id])
+
+  task TaskHistory[]
+
+  @@map("tasks")
+}
+
+model TaskHistory {
+  id String @id @default(uuid())
+  taskId String @map("task_id")
+  changedBy String @map("changed_by")
+  oldStatus Status
+  newStatus Status
+  changedAt DateTime @default(now()) @map("changed_at")
+
+  task Tasks @relation(fields: [taskId], references: [id])
+  whoChanged Users @relation(fields: [changedBy], references: [id])  
+
+  @@map("task_history")
+}
