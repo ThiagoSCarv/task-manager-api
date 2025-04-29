@@ -7,8 +7,23 @@ const usersRoutes = Router();
 const usersController = new UsersController();
 
 usersRoutes.post("/", usersController.create);
-usersRoutes.get("/", ensureAuthenticated, verifyAuthorization(["admin"]), usersController.index)
-usersRoutes.put("/:id", ensureAuthenticated, verifyAuthorization(["admin"]), usersController.update)
-usersRoutes.delete("/:id", ensureAuthenticated, verifyAuthorization(["admin"]), usersController.delete)
+usersRoutes.get(
+  "/",
+  ensureAuthenticated,
+  verifyAuthorization(["admin"]),
+  usersController.index
+);
+usersRoutes.put(
+  "/:id",
+  ensureAuthenticated,
+  verifyAuthorization(["admin"]),
+  usersController.update
+);
+usersRoutes.delete(
+  "/:id",
+  ensureAuthenticated,
+  verifyAuthorization(["admin"]),
+  usersController.delete
+);
 
 export { usersRoutes };

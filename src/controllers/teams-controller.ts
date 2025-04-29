@@ -1,0 +1,48 @@
+import { prisma } from "@/config/prisma";
+import { AppError } from "@/utils/app-error";
+import { Request, Response, NextFunction } from "express";
+import { z } from "zod";
+
+class TeamsController {
+  async create(request: Request, response: Response, next: NextFunction) {
+    try {
+      const bodySchema = z.object({
+        name: z.string().trim().min(4),
+        description: z.string().trim(),
+      });
+
+      const { name, description } = bodySchema.parse(request.body);
+
+      const team = await prisma.teams.findFirst({ where: { name } });
+
+      if (team) {
+        throw new AppError("team already exists");
+      }
+
+      await prisma.teams.create({
+        data: {
+          name,
+          description,
+        },
+      });
+
+      return response.status(201).json({ name, description });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async index(request: Request, response: Response, next: NextFunction) {
+    try {
+      const teams = await prisma.teams.findMany();
+
+      return response.json(teams);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  
+}
+
+export { TeamsController };
