@@ -52,7 +52,7 @@ class UsersController {
   async update(request: Request, response: Response, next: NextFunction) {
     try {
       const paramsSchema = z.object({
-        id: z.string().trim(),
+        id: z.string().uuid(),
       });
 
       const bodySchema = z.object({
@@ -88,7 +88,7 @@ class UsersController {
   async remove(request: Request, response: Response, next: NextFunction) {
     try {
       const paramsSchema = z.object({
-        id: z.string().trim(),
+        id: z.string().uuid(),
       });
 
       const { id } = paramsSchema.parse(request.params);

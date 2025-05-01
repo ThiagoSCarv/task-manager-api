@@ -45,7 +45,7 @@ class TeamsController {
   async update(request: Request, response: Response, next: NextFunction) {
     try {
       const paramsSchema = z.object({
-        id: z.string(),
+        id: z.string().uuid(),
       });
 
       const bodySchema = z.object({
@@ -74,7 +74,7 @@ class TeamsController {
   async remove(request: Request, response: Response, next: NextFunction) {
     try {
       const paramsSchema = z.object({
-        id: z.string(),
+        id: z.string().uuid(),
       });
 
       const { id } = paramsSchema.parse(request.params);
