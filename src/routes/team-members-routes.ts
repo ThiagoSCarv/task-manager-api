@@ -27,4 +27,11 @@ teamMembersRoutes.delete(
   teamMembersController.remove
 );
 
+teamMembersRoutes.get(
+  "/show-members-by-team/:id",
+  ensureAuthenticated,
+  verifyAuthorization(["admin", "member"]),
+  teamMembersController.show
+);
+
 export { teamMembersRoutes };

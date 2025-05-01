@@ -73,6 +73,41 @@ class TeamMembersController {
     }
   }
 
+  async show(request: Request, response: Response, next: NextFunction) {
+    try {
+      const paramsSchema = z.object({
+        id: z.string().uuid(),
+      });
+
+      const { id } = paramsSchema.parse(request.params);
+
+      const membersByTeams = await prisma.teamMembers.findMany({
+        where: { teamId: id },
+        include: {
+          user: {
+            select: {
+              name: true,
+              role: true,
+            },
+          },
+          team: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
+
+      if (!membersByTeams) {
+        throw new AppError("this");
+      }
+
+      return response.json(membersByTeams);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async remove(request: Request, response: Response, next: NextFunction) {
     try {
       const paramsSchema = z.object({
