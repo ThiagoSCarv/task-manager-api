@@ -9,8 +9,29 @@ const tasksController = new TasksController();
 tasksRoutes.post(
   "/",
   ensureAuthenticated,
-  verifyAuthorization(["admin", "member"]),
+  verifyAuthorization(["admin"]),
   tasksController.create
+);
+
+tasksRoutes.get(
+  "/",
+  ensureAuthenticated,
+  verifyAuthorization(["admin"]),
+  tasksController.index
+);
+
+tasksRoutes.put(
+  "/:id",
+  ensureAuthenticated,
+  verifyAuthorization(["admin"]),
+  tasksController.update
+);
+
+tasksRoutes.delete(
+  "/:id",
+  ensureAuthenticated,
+  verifyAuthorization(["admin"]),
+  tasksController.remove
 );
 
 export { tasksRoutes };
