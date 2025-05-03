@@ -88,8 +88,8 @@ model TaskHistory {
   id String @id @default(uuid())
   taskId String @map("task_id")
   changedBy String @map("changed_by")
-  oldStatus Status
-  newStatus Status
+  oldStatus Status @default(pending)
+  newStatus Status @default(pending)
   changedAt DateTime @default(now()) @map("changed_at")
 
   task Tasks @relation(fields: [taskId], references: [id])

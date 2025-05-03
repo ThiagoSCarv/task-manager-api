@@ -32,7 +32,7 @@ class TasksByUsersController {
 
       const { id } = paramsSchema.parse(request.params);
 
-      const user_id = request.user?.id;
+      const user_id = String(request.user?.id);
 
       const bodySchema = z.object({
         status: z.enum(["pending", "in_progress", "completed"]),
@@ -46,6 +46,8 @@ class TasksByUsersController {
           assignedTo: user_id,
         },
       });
+
+      const old_status = task?.status;
 
       if (!task) {
         throw new AppError("task not found or not assigned to this user", 404);
@@ -62,6 +64,15 @@ class TasksByUsersController {
         },
         data: {
           status,
+        },
+      });
+
+      await prisma.taskHistory.create({
+        data: {
+          taskId: id,
+          changedBy: user_id,
+          oldStatus: old_status,
+          newStatus: status,
         },
       });
 

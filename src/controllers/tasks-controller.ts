@@ -111,11 +111,15 @@ class TasksController {
       const { title, description, priority, status, assigned_to, team_id } =
         bodySchema.parse(request.body);
 
+      const user_id = String(request.user?.id);
+
       const task = await prisma.tasks.findFirst({
         where: {
           id: id,
         },
       });
+
+      const old_status = task?.status;
 
       if (!task) {
         throw new AppError("task not found");
@@ -136,6 +140,15 @@ class TasksController {
           status,
           assignedTo: assigned_to,
           teamId: team_id,
+        },
+      });
+
+      await prisma.taskHistory.create({
+        data: {
+          taskId: id,
+          changedBy: user_id,
+          oldStatus: old_status,
+          newStatus: status,
         },
       });
 

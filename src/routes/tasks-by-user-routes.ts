@@ -2,6 +2,7 @@ import { Router } from "express";
 import { TasksByUsersController } from "@/controllers/tasks-by-user.controller";
 import { ensureAuthenticated } from "@/middlewares/ensure-authenticated";
 import { verifyAuthorization } from "@/middlewares/verify-authorization";
+import { TaskHistoryController } from "@/controllers/task-history-controller";
 
 const tasksByUserRoutes = Router();
 const tasksByUsersController = new TasksByUsersController();
