@@ -25,7 +25,7 @@ class UsersController {
         throw new AppError("user with same email already exists");
       }
 
-      await prisma.users.create({
+      const user = await prisma.users.create({
         data: {
           name,
           email,
@@ -33,7 +33,9 @@ class UsersController {
         },
       });
 
-      return response.status(201).json({ name, email });
+      const { password: _, ...userWithoutPassword } = user;
+
+      return response.status(201).json(userWithoutPassword);
     } catch (error) {
       next(error);
     }

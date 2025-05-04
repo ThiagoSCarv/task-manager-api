@@ -35,7 +35,9 @@ class SessionsController {
         subject: String(user.id),
       });
 
-      return response.status(201).json(token);
+      const { password: hashedPassword, ...userWithoutPassword } = user;
+
+      return response.json({ token, user: userWithoutPassword });
     } catch (error) {
       next(error);
     }
